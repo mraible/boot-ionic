@@ -1,31 +1,15 @@
 
 var xAuthTokenHeaderName = 'x-auth-token';
 
-angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.services'])
+angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 	.config(
-		[ '$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+		[ '$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-			$routeProvider.when('/create', {
-				templateUrl: 'partials/create.html',
-				controller: CreateController
-			});
+            $stateProvider.state('create', {url: '/create', templateUrl: 'partials/create.html', controller: CreateController})
+                .state('edit', {url: '/edit/:id', templateUrl: 'partials/edit.html', controller: EditController})
+                .state('login', {url: '/login', templateUrl: 'partials/login.html', controller: LoginController});
 
-			$routeProvider.when('/edit/:id', {
-				templateUrl: 'partials/edit.html',
-				controller: EditController
-			});
-
-			$routeProvider.when('/login', {
-				templateUrl: 'partials/login.html',
-				controller: LoginController
-			});
-
-			$routeProvider.otherwise({
-				templateUrl: 'partials/index.html',
-				controller: IndexController
-			});
-
-			$locationProvider.hashPrefix('!');
+            $urlRouterProvider.otherwise('/login');
 
 			/* Intercept http errors */
 			var interceptor = function ($rootScope, $q, $location) {
