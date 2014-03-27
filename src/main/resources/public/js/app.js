@@ -7,9 +7,10 @@ angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 
             $stateProvider.state('create', {url: '/create', templateUrl: 'partials/create.html', controller: CreateController})
                 .state('edit', {url: '/edit/:id', templateUrl: 'partials/edit.html', controller: EditController})
-                .state('login', {url: '/login', templateUrl: 'partials/login.html', controller: LoginController});
+                .state('login', {url: '/login', templateUrl: 'partials/login.html', controller: LoginController})
+                .state('index', {url: '/index', templateUrl: 'partials/index.html', controller: IndexController});
 
-            $urlRouterProvider.otherwise('/login');
+            $urlRouterProvider.otherwise('/index');
 
 			/* Intercept http errors */
 			var interceptor = function ($rootScope, $q, $location) {
@@ -40,6 +41,7 @@ angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 		    };
 		    $httpProvider.responseInterceptors.push(interceptor);
 
+            $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
 		} ]
 
 	).run(function($rootScope, $http, $location, $cookieStore, LoginService) {
@@ -85,21 +87,33 @@ angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 	});
 
 
-function IndexController($scope, NewsService) {
+function IndexController($scope, $state, NewsService) {
 
 	$scope.newsEntries = NewsService.query();
+
+    $scope.data = {
+        showDelete: false
+    };
 
 	$scope.deleteEntry = function(newsEntry) {
 		newsEntry.$remove(function() {
 			$scope.newsEntries = NewsService.query();
 		});
 	};
+
+    $scope.itemButtons = [{
+        text: 'Edit',
+        type: 'button-assertive',
+        onTap: function (item) {
+            $state.go('edit', {id: item.id});
+        }
+    }];
 }
 
 
-function EditController($scope, $routeParams, $location, NewsService) {
+function EditController($scope, $stateParams, $location, NewsService) {
 
-	$scope.newsEntry = NewsService.get({id: $routeParams.id});
+	$scope.newsEntry = NewsService.get({id: $stateParams.id});
 
 	$scope.save = function() {
 		$scope.newsEntry.$save(function() {
@@ -122,9 +136,12 @@ function CreateController($scope, $location, NewsService) {
 
 
 function LoginController($scope, $rootScope, $location, $http, $cookieStore, LoginService) {
+    $scope.credentials = {
+        username: '', password: ''
+    };
 
 	$scope.login = function() {
-		LoginService.authenticate($.param({username: $scope.username, password: $scope.password}), function(user) {
+		LoginService.authenticate({username: $scope.credentials.username, password: $scope.credentials.password}, function(user) {
 			$rootScope.user = user;
 			$http.defaults.headers.common[ xAuthTokenHeaderName ] = user.token;
 			$cookieStore.put('user', user);
@@ -142,8 +159,7 @@ services.factory('LoginService', function($resource) {
 			{
 				authenticate: {
 					method: 'POST',
-					params: {'action' : 'authenticate'},
-					headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+					params: {'action' : 'authenticate'}
 				}
 			}
 		);

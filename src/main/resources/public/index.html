@@ -5,40 +5,15 @@
     <link rel="stylesheet" href="css/ionic.css"/>
  </head>
 <body>
-
-	<nav class="navbar navbar-fixed-top navbar-default" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Angular+Rest+SpringSecurity</a>
-			</div>
-
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#!/">Home</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right" ng-show="user">
-					<li class="dropdown">
-						<a href="" class="dropdown-toggle" data-toggle="dropdown">{{user.name}} <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="" ng-click="logout()">Logout</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-
-	<div class="container">
-		<div class="alert alert-danger" ng-show="error">{{error}}</div>
-		<div ng-view></div>
-	</div>
+    <ion-nav-bar class="bar-positive nav-title-slide-ios7"></ion-nav-bar>
+    <ion-nav-view animation="slide-left-right">
+        <div class="alert alert-danger" ng-show="error">{{error}}</div>
+    </ion-nav-view>
+    <ion-footer-bar class="bar-dark" ng-show="user">
+        <button class="button button-assertive" ng-click="logout()">
+            Logout
+        </button>
+    </ion-footer-bar>
 
     <script src="js/ionic.bundle.js"></script>
     <script src="webjars/angularjs/1.2.13/angular-resource.js"></script>
