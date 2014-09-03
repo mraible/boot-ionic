@@ -64,8 +64,6 @@ angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 			return $rootScope.user.roles[role];
 		};
 
-
-
 		$rootScope.logout = function() {
 			delete $rootScope.user;
 			delete $http.defaults.headers.common[xAuthTokenHeaderName];
@@ -80,7 +78,6 @@ angular.module('exampleApp', ['ionic', 'ngCookies', 'exampleApp.services'])
 		if (user !== undefined) {
 			$rootScope.user = user;
 			$http.defaults.headers.common[xAuthTokenHeaderName] = user.token;
-
 			$location.path(originalPath);
 		}
 
@@ -101,13 +98,9 @@ function IndexController($scope, $state, NewsService) {
 		});
 	};
 
-    $scope.itemButtons = [{
-        text: 'Edit',
-        type: 'button-assertive',
-        onTap: function (item) {
-            $state.go('edit', {id: item.id});
-        }
-    }];
+    $scope.edit = function(newsEntry) {
+        $state.go('edit', {id: newsEntry.id});
+    };
 }
 
 

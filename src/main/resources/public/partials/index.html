@@ -11,11 +11,17 @@
                ng-show="hasRole('ROLE_ADMIN')"></a>
         </ion-nav-buttons>
 
-        <ion-list show-delete="data.showDelete" on-delete="deleteEntry(item)"
-                  option-buttons="itemButtons" can-swipe="hasRole('ROLE_ADMIN')">
-            <ion-item ng-repeat="newsEntry in newsEntries" item="newsEntry">
+        <ion-list show-delete="data.showDelete" can-swipe="hasRole('ROLE_ADMIN')">
+            <ion-item ng-repeat="newsEntry in newsEntries">
                 <h4>{{newsEntry.date | date}}</h4>
                 <p>{{newsEntry.content}}</p>
+                <ion-option-button class="button-assertive"
+                                   ng-click="edit(newsEntry)">
+                    Edit
+                </ion-option-button>
+                <ion-delete-button class="ion-minus-circled"
+                                   ng-click="deleteEntry(newsEntry)">
+                </ion-delete-button>
             </ion-item>
         </ion-list>
     </ion-content>
