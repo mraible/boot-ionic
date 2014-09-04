@@ -1,9 +1,5 @@
 package example.xauth;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +10,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This controller generates the token that must be present in subsequent REST
@@ -24,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Josh Long (josh@joshlong.com)
  */
 @RestController
-@Api("user")
+@Api("User")
 public class UserXAuthTokenController {
 
 	private final TokenUtils tokenUtils = new TokenUtils();
@@ -37,11 +40,11 @@ public class UserXAuthTokenController {
 		this.userDetailsService = userDetailsService;
 	}
 
-	@RequestMapping(value = "/authenticate", method = { RequestMethod.POST })
-    @ApiOperation(value = "authenticate")
+	@RequestMapping(value = "/authenticate", method = {RequestMethod.POST})
+	@ApiOperation(value = "authenticate")
 	public UserTransfer authorize(@RequestBody AuthenticationRequest authenticationRequest) {
-        String username = authenticationRequest.getUsername();
-        String password = authenticationRequest.getPassword();
+		String username = authenticationRequest.getUsername();
+		String password = authenticationRequest.getPassword();
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 		Authentication authentication = this.authenticationManager.authenticate(token);
